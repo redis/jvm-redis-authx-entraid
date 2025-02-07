@@ -554,6 +554,7 @@ public class EntraIDUnitTests {
         int maxAttemptsToRetry = 6;
         int tokenRequestExecTimeoutInMs = 401;
         TokenAuthConfig tokenAuthConfig = EntraIDTokenAuthConfigBuilder.builder()
+                .clientId("testClientId").secret("testSecret")
                 .expirationRefreshRatio(refreshRatio).delayInMsToRetry(delayInMsToRetry)
                 .lowerRefreshBoundMillis(lowerRefreshBoundMillis)
                 .maxAttemptsToRetry(maxAttemptsToRetry)
