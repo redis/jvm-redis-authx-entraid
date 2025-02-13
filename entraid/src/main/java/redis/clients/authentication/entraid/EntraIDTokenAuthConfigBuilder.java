@@ -118,6 +118,11 @@ public class EntraIDTokenAuthConfigBuilder
             throw new RedisEntraIDException(
                     "Cannot have both customEntraIdAuthenticationSupplier and ServicePrincipal/ManagedIdentity!");
         }
+        if (this.customEntraIdAuthenticationSupplier == null && spi == null && mii == null) {
+            throw new RedisEntraIDException(
+                "Missing configuration. One of customEntraIdAuthenticationSupplier, ServicePrincipal or ManagedIdentity must be configured!");
+        }
+
         if (spi != null) {
             super.identityProviderConfig(
                 new EntraIDIdentityProviderConfig(spi, scopes, tokenRequestExecTimeoutInMs));
