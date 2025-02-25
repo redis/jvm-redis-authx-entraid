@@ -22,7 +22,7 @@ public class AzureTokenAuthConfigBuilder
 
     private DefaultAzureCredential defaultAzureCredential;
     private Set<String> scopes = DEFAULT_SCOPES;
-    private int tokenRequestExecTimeoutInMs;
+    private int tokenRequestExecTimeoutInMs = DEFAULT_TOKEN_REQUEST_EXECUTION_TIMEOUT_IN_MS;
 
     public AzureTokenAuthConfigBuilder() {
         this.expirationRefreshRatio(DEFAULT_EXPIRATION_REFRESH_RATIO)
