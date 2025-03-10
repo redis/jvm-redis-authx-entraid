@@ -43,7 +43,6 @@ import redis.clients.authentication.core.TokenManagerConfig;
  * up by calling {@link #close()}.</p>
  * 
  * @see TokenAuthConfig.Builder
- * @see DefaultAzureCredentialBuilder
  * @see DefaultAzureCredential
  */
 public class AzureTokenAuthConfigBuilder

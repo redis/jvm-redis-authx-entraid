@@ -45,7 +45,7 @@ import redis.clients.authentication.core.IdentityProviderConfig;
  * 
  * @see IdentityProviderConfig
  * @see AzureIdentityProvider
- * @see DefaultAzureCredentialBuilder
+ * @see DefaultAzureCredential
  */
 public final class AzureIdentityProviderConfig implements IdentityProviderConfig {
 
