@@ -45,8 +45,8 @@ import redis.clients.authentication.core.TokenManagerConfig;
  * @see TokenAuthConfig.Builder
  * @see DefaultAzureCredential
  */
-public class AzureTokenAuthConfigBuilder
-        extends TokenAuthConfig.Builder<AzureTokenAuthConfigBuilder> implements AutoCloseable {
+public class AzureTokenAuthConfigBuilder extends TokenAuthConfig.Builder<AzureTokenAuthConfigBuilder>
+        implements AutoCloseable {
     public static final float DEFAULT_EXPIRATION_REFRESH_RATIO = 0.75F;
     public static final int DEFAULT_LOWER_REFRESH_BOUND_MILLIS = 2 * 60 * 1000;
     public static final int DEFAULT_TOKEN_REQUEST_EXECUTION_TIMEOUT_IN_MS = 1000;
@@ -62,12 +62,10 @@ public class AzureTokenAuthConfigBuilder
         this.expirationRefreshRatio(DEFAULT_EXPIRATION_REFRESH_RATIO)
                 .lowerRefreshBoundMillis(DEFAULT_LOWER_REFRESH_BOUND_MILLIS)
                 .tokenRequestExecTimeoutInMs(DEFAULT_TOKEN_REQUEST_EXECUTION_TIMEOUT_IN_MS)
-                .maxAttemptsToRetry(DEFAULT_MAX_ATTEMPTS_TO_RETRY)
-                .delayInMsToRetry(DEFAULT_DELAY_IN_MS_TO_RETRY);
+                .maxAttemptsToRetry(DEFAULT_MAX_ATTEMPTS_TO_RETRY).delayInMsToRetry(DEFAULT_DELAY_IN_MS_TO_RETRY);
     }
 
-    public AzureTokenAuthConfigBuilder defaultAzureCredential(
-            DefaultAzureCredential defaultAzureCredential) {
+    public AzureTokenAuthConfigBuilder defaultAzureCredential(DefaultAzureCredential defaultAzureCredential) {
         this.defaultAzureCredential = defaultAzureCredential;
         return this;
     }
@@ -78,16 +76,15 @@ public class AzureTokenAuthConfigBuilder
     }
 
     @Override
-    public AzureTokenAuthConfigBuilder tokenRequestExecTimeoutInMs(
-            int tokenRequestExecTimeoutInMs) {
+    public AzureTokenAuthConfigBuilder tokenRequestExecTimeoutInMs(int tokenRequestExecTimeoutInMs) {
         super.tokenRequestExecTimeoutInMs(tokenRequestExecTimeoutInMs);
         this.tokenRequestExecTimeoutInMs = tokenRequestExecTimeoutInMs;
         return this;
     }
 
     public TokenAuthConfig build() {
-        super.identityProviderConfig(new AzureIdentityProviderConfig(defaultAzureCredential, scopes,
-                tokenRequestExecTimeoutInMs));
+        super.identityProviderConfig(
+            new AzureIdentityProviderConfig(defaultAzureCredential, scopes, tokenRequestExecTimeoutInMs));
         return super.build();
     }
 

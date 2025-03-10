@@ -24,8 +24,7 @@ public class TokenRequestException extends AuthXException {
         if (identityProviderFailedWith == null) {
             return msg;
         }
-        return msg + " Identity provider request failed!"
-                + identityProviderFailedWith.getMessage();
+        return msg + " Identity provider request failed!" + identityProviderFailedWith.getMessage();
     }
 
 }

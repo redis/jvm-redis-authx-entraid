@@ -53,12 +53,9 @@ public final class AzureIdentityProvider implements IdentityProvider {
 
     private Supplier<AccessToken> accessTokenSupplier;
 
-    public AzureIdentityProvider(DefaultAzureCredential defaultAzureCredential, Set<String> scopes,
-            int timeout) {
-        TokenRequestContext ctx = new TokenRequestContext()
-                .setScopes(new ArrayList<String>(scopes));
-        accessTokenSupplier = () -> defaultAzureCredential.getToken(ctx)
-                .block(Duration.ofMillis(timeout));
+    public AzureIdentityProvider(DefaultAzureCredential defaultAzureCredential, Set<String> scopes, int timeout) {
+        TokenRequestContext ctx = new TokenRequestContext().setScopes(new ArrayList<String>(scopes));
+        accessTokenSupplier = () -> defaultAzureCredential.getToken(ctx).block(Duration.ofMillis(timeout));
     }
 
     @Override

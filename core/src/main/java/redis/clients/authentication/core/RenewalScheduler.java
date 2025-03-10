@@ -33,8 +33,7 @@ class RenewalScheduler {
      */
     public RenewalTask scheduleNext(long delay) {
         // Schedule the task to run after the given delay
-        lastTask = new RenewalTask(
-                scheduler.schedule(() -> renewToken.get(), delay, TimeUnit.MILLISECONDS));
+        lastTask = new RenewalTask(scheduler.schedule(() -> renewToken.get(), delay, TimeUnit.MILLISECONDS));
         return lastTask;
     }
 

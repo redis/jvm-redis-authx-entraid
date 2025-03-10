@@ -35,31 +35,27 @@ public final class EntraIDIdentityProvider implements IdentityProvider {
     private ClientAppFactory clientAppFactory;
     private ClientApp clientApp;
 
-    public EntraIDIdentityProvider(ServicePrincipalInfo servicePrincipalInfo, Set<String> scopes,
-            int timeout) {
+    public EntraIDIdentityProvider(ServicePrincipalInfo servicePrincipalInfo, Set<String> scopes, int timeout) {
 
         clientAppFactory = () -> {
             return createConfidentialClientApp(servicePrincipalInfo, scopes, timeout);
         };
     }
 
-    private ClientApp createConfidentialClientApp(ServicePrincipalInfo servicePrincipalInfo,
-            Set<String> scopes, int timeout) {
+    private ClientApp createConfidentialClientApp(ServicePrincipalInfo servicePrincipalInfo, Set<String> scopes,
+            int timeout) {
         IClientCredential credential = getClientCredential(servicePrincipalInfo);
         ConfidentialClientApplication app;
 
         try {
             String authority = servicePrincipalInfo.getAuthority();
-            authority = authority == null ? ConfidentialClientApplication.DEFAULT_AUTHORITY
-                    : authority;
-            app = ConfidentialClientApplication
-                    .builder(servicePrincipalInfo.getClientId(), credential).authority(authority)
-                    .readTimeoutForDefaultHttpClient(timeout).build();
+            authority = authority == null ? ConfidentialClientApplication.DEFAULT_AUTHORITY : authority;
+            app = ConfidentialClientApplication.builder(servicePrincipalInfo.getClientId(), credential)
+                    .authority(authority).readTimeoutForDefaultHttpClient(timeout).build();
         } catch (MalformedURLException e) {
             throw new RedisEntraIDException("Failed to init EntraID client!", e);
         }
-        ClientCredentialParameters params = ClientCredentialParameters.builder(scopes)
-                .skipCache(true).build();
+        ClientCredentialParameters params = ClientCredentialParameters.builder(scopes).skipCache(true).build();
 
         return () -> requestWithConfidentialClient(app, params);
     }
@@ -71,18 +67,16 @@ public final class EntraIDIdentityProvider implements IdentityProvider {
         };
     }
 
-    private ClientApp createManagedIdentityApp(ManagedIdentityInfo info, Set<String> scopes,
-            int timeout) {
+    private ClientApp createManagedIdentityApp(ManagedIdentityInfo info, Set<String> scopes, int timeout) {
         ManagedIdentityApplication app = ManagedIdentityApplication.builder(info.getId())
                 .readTimeoutForDefaultHttpClient(timeout).build();
 
-        ManagedIdentityParameters params = ManagedIdentityParameters
-                .builder(scopes.iterator().next()).forceRefresh(true).build();
+        ManagedIdentityParameters params = ManagedIdentityParameters.builder(scopes.iterator().next())
+                .forceRefresh(true).build();
         return () -> requestWithManagedIdentity(app, params);
     }
 
-    public EntraIDIdentityProvider(
-            Supplier<IAuthenticationResult> customEntraIdAuthenticationSupplier) {
+    public EntraIDIdentityProvider(Supplier<IAuthenticationResult> customEntraIdAuthenticationSupplier) {
 
         clientAppFactory = () -> {
             return () -> customEntraIdAuthenticationSupplier.get();

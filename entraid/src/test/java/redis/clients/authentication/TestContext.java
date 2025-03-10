@@ -42,12 +42,10 @@ public class TestContext {
         this.clientId = System.getenv(AZURE_CLIENT_ID);
         this.authority = System.getenv(AZURE_AUTHORITY);
         this.clientSecret = System.getenv(AZURE_CLIENT_SECRET);
-        this.userAssignedManagedIdentityClientId = System
-                .getenv(AZURE_USER_ASSIGNED_MANAGED_IDENTITY_CLIENT_ID);
+        this.userAssignedManagedIdentityClientId = System.getenv(AZURE_USER_ASSIGNED_MANAGED_IDENTITY_CLIENT_ID);
     }
 
-    public TestContext(String clientId, String authority, String clientSecret,
-            Set<String> redisScopes) {
+    public TestContext(String clientId, String authority, String clientSecret, Set<String> redisScopes) {
         this.clientId = clientId;
         this.authority = authority;
         this.clientSecret = clientSecret;
@@ -99,7 +97,8 @@ public class TestContext {
 
             // Generate the private key from the decoded byte array using PKCS8EncodedKeySpec
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA"); // Use the correct algorithm (e.g., "RSA", "EC", "DSA")
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA"); // Use the correct algorithm (e.g., "RSA", "EC",
+                                                                   // "DSA")
             PrivateKey key = keyFactory.generatePrivate(keySpec);
             return key;
         } catch (Exception e) {

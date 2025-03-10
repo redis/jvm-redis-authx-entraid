@@ -11,8 +11,7 @@ public class TokenAuthConfig {
     private TokenManagerConfig tokenManagerConfig;
     private IdentityProviderConfig identityProviderConfig;
 
-    public TokenAuthConfig(TokenManagerConfig tokenManagerConfig,
-            IdentityProviderConfig identityProviderConfig) {
+    public TokenAuthConfig(TokenManagerConfig tokenManagerConfig, IdentityProviderConfig identityProviderConfig) {
         this.tokenManagerConfig = tokenManagerConfig;
         this.identityProviderConfig = identityProviderConfig;
     }
@@ -68,9 +67,9 @@ public class TokenAuthConfig {
         }
 
         public TokenAuthConfig build() {
-            return new TokenAuthConfig(new TokenManagerConfig(expirationRefreshRatio,
-                    lowerRefreshBoundMillis, tokenRequestExecTimeoutInMs,
-                    new TokenManagerConfig.RetryPolicy(maxAttemptsToRetry, delayInMsToRetry)),
+            return new TokenAuthConfig(
+                    new TokenManagerConfig(expirationRefreshRatio, lowerRefreshBoundMillis, tokenRequestExecTimeoutInMs,
+                            new TokenManagerConfig.RetryPolicy(maxAttemptsToRetry, delayInMsToRetry)),
                     identityProviderConfig);
         }
 
@@ -78,8 +77,7 @@ public class TokenAuthConfig {
             return new Builder().expirationRefreshRatio(sample.expirationRefreshRatio)
                     .lowerRefreshBoundMillis(sample.lowerRefreshBoundMillis)
                     .tokenRequestExecTimeoutInMs(sample.tokenRequestExecTimeoutInMs)
-                    .maxAttemptsToRetry(sample.maxAttemptsToRetry)
-                    .delayInMsToRetry(sample.delayInMsToRetry)
+                    .maxAttemptsToRetry(sample.maxAttemptsToRetry).delayInMsToRetry(sample.delayInMsToRetry)
                     .identityProviderConfig(sample.identityProviderConfig);
         }
     }

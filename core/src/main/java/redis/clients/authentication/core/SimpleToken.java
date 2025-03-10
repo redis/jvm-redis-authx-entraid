@@ -16,8 +16,7 @@ public class SimpleToken implements Token {
     private long receivedAt;
     private Map<String, ?> claims;
 
-    public SimpleToken(String user, String value, long expiresAt, long receivedAt,
-            Map<String, ?> claims) {
+    public SimpleToken(String user, String value, long expiresAt, long receivedAt, Map<String, ?> claims) {
         this.user = user;
         this.value = value;
         this.expiresAt = expiresAt;

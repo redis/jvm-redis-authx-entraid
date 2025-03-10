@@ -72,8 +72,8 @@ import redis.clients.authentication.entraid.ServicePrincipalInfo.ServicePrincipa
  * @see AutoCloseable
  * 
  */
-public class EntraIDTokenAuthConfigBuilder
-        extends TokenAuthConfig.Builder<EntraIDTokenAuthConfigBuilder> implements AutoCloseable {
+public class EntraIDTokenAuthConfigBuilder extends TokenAuthConfig.Builder<EntraIDTokenAuthConfigBuilder>
+        implements AutoCloseable {
     public static final float DEFAULT_EXPIRATION_REFRESH_RATIO = 0.75F;
     public static final int DEFAULT_LOWER_REFRESH_BOUND_MILLIS = 2 * 60 * 1000;
     public static final int DEFAULT_TOKEN_REQUEST_EXECUTION_TIMEOUT_IN_MS = 1000;
@@ -95,8 +95,7 @@ public class EntraIDTokenAuthConfigBuilder
         this.expirationRefreshRatio(DEFAULT_EXPIRATION_REFRESH_RATIO)
                 .lowerRefreshBoundMillis(DEFAULT_LOWER_REFRESH_BOUND_MILLIS)
                 .tokenRequestExecTimeoutInMs(DEFAULT_TOKEN_REQUEST_EXECUTION_TIMEOUT_IN_MS)
-                .maxAttemptsToRetry(DEFAULT_MAX_ATTEMPTS_TO_RETRY)
-                .delayInMsToRetry(DEFAULT_DELAY_IN_MS_TO_RETRY);
+                .maxAttemptsToRetry(DEFAULT_MAX_ATTEMPTS_TO_RETRY).delayInMsToRetry(DEFAULT_DELAY_IN_MS_TO_RETRY);
     }
 
     public EntraIDTokenAuthConfigBuilder clientId(String clientId) {
@@ -127,8 +126,8 @@ public class EntraIDTokenAuthConfigBuilder
         return this;
     }
 
-    public EntraIDTokenAuthConfigBuilder userAssignedManagedIdentity(
-            UserManagedIdentityType userManagedType, String id) {
+    public EntraIDTokenAuthConfigBuilder userAssignedManagedIdentity(UserManagedIdentityType userManagedType,
+            String id) {
         mii = new ManagedIdentityInfo(userManagedType, id);
         return this;
     }
@@ -145,8 +144,7 @@ public class EntraIDTokenAuthConfigBuilder
     }
 
     @Override
-    public EntraIDTokenAuthConfigBuilder tokenRequestExecTimeoutInMs(
-            int tokenRequestExecTimeoutInMs) {
+    public EntraIDTokenAuthConfigBuilder tokenRequestExecTimeoutInMs(int tokenRequestExecTimeoutInMs) {
         super.tokenRequestExecTimeoutInMs(tokenRequestExecTimeoutInMs);
         this.tokenRequestExecTimeoutInMs = tokenRequestExecTimeoutInMs;
         return this;
@@ -165,8 +163,7 @@ public class EntraIDTokenAuthConfigBuilder
             }
         }
         if (spi != null && mii != null) {
-            throw new RedisEntraIDException(
-                    "Cannot have both ServicePrincipal and ManagedIdentity!");
+            throw new RedisEntraIDException("Cannot have both ServicePrincipal and ManagedIdentity!");
         }
         if (this.customEntraIdAuthenticationSupplier != null && (spi != null || mii != null)) {
             throw new RedisEntraIDException(
@@ -174,20 +171,17 @@ public class EntraIDTokenAuthConfigBuilder
         }
         if (this.customEntraIdAuthenticationSupplier == null && spi == null && mii == null) {
             throw new RedisEntraIDException(
-                "Missing configuration. One of customEntraIdAuthenticationSupplier, ServicePrincipal or ManagedIdentity must be configured!");
+                    "Missing configuration. One of customEntraIdAuthenticationSupplier, ServicePrincipal or ManagedIdentity must be configured!");
         }
 
         if (spi != null) {
-            super.identityProviderConfig(
-                new EntraIDIdentityProviderConfig(spi, scopes, tokenRequestExecTimeoutInMs));
+            super.identityProviderConfig(new EntraIDIdentityProviderConfig(spi, scopes, tokenRequestExecTimeoutInMs));
         }
         if (mii != null) {
-            super.identityProviderConfig(
-                new EntraIDIdentityProviderConfig(mii, scopes, tokenRequestExecTimeoutInMs));
+            super.identityProviderConfig(new EntraIDIdentityProviderConfig(mii, scopes, tokenRequestExecTimeoutInMs));
         }
         if (customEntraIdAuthenticationSupplier != null) {
-            super.identityProviderConfig(
-                new EntraIDIdentityProviderConfig(customEntraIdAuthenticationSupplier));
+            super.identityProviderConfig(new EntraIDIdentityProviderConfig(customEntraIdAuthenticationSupplier));
         }
         return super.build();
     }
