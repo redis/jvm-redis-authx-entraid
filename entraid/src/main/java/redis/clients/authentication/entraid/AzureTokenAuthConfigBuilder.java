@@ -1,5 +1,8 @@
 /*
- * Copyright 2024, Redis Ltd. and Contributors All rights reserved. Licensed under the MIT License.
+ * Copyright 2024, Redis Ltd. and Contributors 
+ * All rights reserved. 
+ * 
+ * Licensed under the MIT License.
  */
 package redis.clients.authentication.entraid;
 
@@ -11,6 +14,38 @@ import com.azure.identity.DefaultAzureCredential;
 import redis.clients.authentication.core.TokenAuthConfig;
 import redis.clients.authentication.core.TokenManagerConfig;
 
+/**
+ * Builder class for configuring Azure Token Authentication via a DefaultAzureCredential.
+ * It builds a TokenAuthConfig object which can be used to authenticate with Azure resources. 
+ * This class extends {@link TokenAuthConfig.Builder} and implements {@link AutoCloseable}.
+ * It provides methods to configure various parameters for Azure Token Authentication.
+ * 
+ * <p>Default values:</p>
+ * <ul>
+ *   <li>{@code DEFAULT_EXPIRATION_REFRESH_RATIO}: 0.75F</li>
+ *   <li>{@code DEFAULT_LOWER_REFRESH_BOUND_MILLIS}: 2 * 60 * 1000</li>
+ *   <li>{@code DEFAULT_TOKEN_REQUEST_EXECUTION_TIMEOUT_IN_MS}: 1000</li>
+ *   <li>{@code DEFAULT_MAX_ATTEMPTS_TO_RETRY}: 5</li>
+ *   <li>{@code DEFAULT_DELAY_IN_MS_TO_RETRY}: 100</li>
+ *   <li>{@code DEFAULT_SCOPES}: "https://redis.azure.com/.default"</li>
+ * </ul>
+ * 
+ * <p>Example usage:</p>
+ * <pre>{@code
+ * AzureTokenAuthConfigBuilder builder = AzureTokenAuthConfigBuilder.builder()
+ *     .defaultAzureCredential(new DefaultAzureCredentialBuilder.build())
+ *     .scopes(Collections.singleton("https://example.com/.default"))
+ *     .tokenRequestExecTimeoutInMs(2000);
+ * TokenAuthConfig config = builder.build();
+ * }</pre>
+ * 
+ * <p>This class is also {@link AutoCloseable}, and resources can be cleaned
+ * up by calling {@link #close()}.</p>
+ * 
+ * @see TokenAuthConfig.Builder
+ * @see DefaultAzureCredentialBuilder
+ * @see DefaultAzureCredential
+ */
 public class AzureTokenAuthConfigBuilder
         extends TokenAuthConfig.Builder<AzureTokenAuthConfigBuilder> implements AutoCloseable {
     public static final float DEFAULT_EXPIRATION_REFRESH_RATIO = 0.75F;
