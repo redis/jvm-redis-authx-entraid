@@ -18,6 +18,60 @@ import redis.clients.authentication.core.TokenManagerConfig;
 import redis.clients.authentication.entraid.ManagedIdentityInfo.UserManagedIdentityType;
 import redis.clients.authentication.entraid.ServicePrincipalInfo.ServicePrincipalAccess;
 
+/**
+ * Builder class for configuring EntraID token authentication.
+ * This class provides methods to set various configuration options for EntraID token authentication.
+ * It extends the TokenAuthConfig.Builder class and implements AutoCloseable.
+ * 
+ * <p>Default values:</p>
+ * <ul>
+ *   <li>DEFAULT_EXPIRATION_REFRESH_RATIO: 0.75F</li>
+ *   <li>DEFAULT_LOWER_REFRESH_BOUND_MILLIS: 120000 (2 minutes)</li>
+ *   <li>DEFAULT_TOKEN_REQUEST_EXECUTION_TIMEOUT_IN_MS: 1000 (1 second)</li>
+ *   <li>DEFAULT_MAX_ATTEMPTS_TO_RETRY: 5</li>
+ *   <li>DEFAULT_DELAY_IN_MS_TO_RETRY: 100 (0.1 second)</li>
+ * </ul>
+ * 
+ * <p>Configuration options:</p>
+ * <ul>
+ *   <li>{@link #clientId(String)}: Sets the client ID.</li>
+ *   <li>{@link #secret(String)}: Sets the client secret and configures access with secret.</li>
+ *   <li>{@link #key(PrivateKey, X509Certificate)}: Sets the private key and certificate, 
+ *      and configures access with certificate.</li>
+ *   <li>{@link #authority(String)}: Sets the authority URL.</li>
+ *   <li>{@link #systemAssignedManagedIdentity()}: Configures system-assigned managed identity.</li>
+ *   <li>{@link #userAssignedManagedIdentity(UserManagedIdentityType, String)}: 
+ *      Configures user-assigned managed identity.</li>
+ *   <li>{@link #customEntraIdAuthenticationSupplier(Supplier)}: Sets a custom authentication supplier.</li>
+ *   <li>{@link #scopes(Set)}: Sets the scopes for the token request.</li>
+ *   <li>{@link #tokenRequestExecTimeoutInMs(int)}: Sets the token request execution timeout in milliseconds.</li>
+ * </ul>
+ * 
+ * <p>Usage:</p>
+ * <pre>
+ * {@code
+ * EntraIDTokenAuthConfigBuilder builder = EntraIDTokenAuthConfigBuilder.builder()
+ *     .clientId("your-client-id")
+ *     .secret("your-secret")
+ *     .authority("https://login.microsoftonline.com/your-tenant-id")
+ *     .scopes(Set.of("https://redis.azure.com/.default"))
+ *     .build();
+ * }
+ * </pre>
+ * 
+ * <p>Note:</p>
+ * <ul>
+ *   <li>Only one of ServicePrincipal, ManagedIdentity or customEntraIdAuthenticationSupplier can be configured.</li>
+ *   <li>Throws RedisEntraIDException if conflicting configurations are provided.</li>
+ * </ul>
+ * For more information and details on how to use, please see:
+ * <p>https://github.com/redis/jedis/blob/master/docs/advanced-usage.md#token-based-authentication
+ * <p>https://github.com/redis/lettuce/blob/main/docs/user-guide/connecting-redis.md#microsoft-entra-id-authentication
+ * 
+ * @see TokenAuthConfig.Builder
+ * @see AutoCloseable
+ * 
+ */
 public class EntraIDTokenAuthConfigBuilder
         extends TokenAuthConfig.Builder<EntraIDTokenAuthConfigBuilder> implements AutoCloseable {
     public static final float DEFAULT_EXPIRATION_REFRESH_RATIO = 0.75F;
@@ -118,6 +172,11 @@ public class EntraIDTokenAuthConfigBuilder
             throw new RedisEntraIDException(
                     "Cannot have both customEntraIdAuthenticationSupplier and ServicePrincipal/ManagedIdentity!");
         }
+        if (this.customEntraIdAuthenticationSupplier == null && spi == null && mii == null) {
+            throw new RedisEntraIDException(
+                "Missing configuration. One of customEntraIdAuthenticationSupplier, ServicePrincipal or ManagedIdentity must be configured!");
+        }
+
         if (spi != null) {
             super.identityProviderConfig(
                 new EntraIDIdentityProviderConfig(spi, scopes, tokenRequestExecTimeoutInMs));

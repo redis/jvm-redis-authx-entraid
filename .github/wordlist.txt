@@ -16,6 +16,8 @@ ClusterPipeline
 ClusterPubSub
 ConnectionPool
 CoreCommands
+Entra
+EntraID
 EVAL
 EVALSHA
 Failback
@@ -30,6 +32,7 @@ GeoRadiusParam
 GeoRadiusStoreParam
 GeoUnit
 GraphCommands
+Gradle
 Grokzen's
 HostAndPort
 HostnameVerifier
@@ -41,6 +44,7 @@ JSONArray
 JSONCommands
 Jaeger
 Javadocs
+Jedis
 ListPosition
 Ludovico
 Magnocavallo
@@ -59,6 +63,7 @@ POJOs
 PubSub
 Queable
 READONLY
+Reauthentication
 RediSearch
 RediSearchCommands
 RedisBloom
