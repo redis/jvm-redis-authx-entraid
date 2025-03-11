@@ -37,6 +37,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
+import com.microsoft.aad.msal4j.IAccount;
+import com.microsoft.aad.msal4j.ITenantProfile;
 import org.awaitility.Awaitility;
 import org.awaitility.Durations;
 import org.junit.Test;
@@ -64,6 +66,7 @@ import redis.clients.authentication.entraid.EntraIDIdentityProvider;
 import redis.clients.authentication.entraid.EntraIDTokenAuthConfigBuilder;
 import redis.clients.authentication.entraid.JWToken;
 import redis.clients.authentication.entraid.ManagedIdentityInfo;
+import redis.clients.authentication.entraid.RedisEntraIDException;
 import redis.clients.authentication.entraid.ServicePrincipalInfo;
 import redis.clients.authentication.entraid.ManagedIdentityInfo.UserManagedIdentityType;
 
@@ -142,6 +145,28 @@ public class EntraIDUnitTests {
             configWithManagedId.getProvider();
         }
     }
+
+    @Test
+    public void testConfigBuilderThrowsErrorIfMissconfigured() {
+
+        // Missing Configuration
+        assertThrows(RedisEntraIDException.class,() -> EntraIDTokenAuthConfigBuilder.builder().build());
+
+        // spi & mpi configured
+        assertThrows(RedisEntraIDException.class,() -> EntraIDTokenAuthConfigBuilder.builder()
+            .clientId("clientid")
+            .secret("secret")
+            .systemAssignedManagedIdentity()
+            .build());
+
+        // spi || mpi  && customEntraIdAuthenticationSupplier configured
+        assertThrows(RedisEntraIDException.class,() -> EntraIDTokenAuthConfigBuilder.builder()
+            .clientId("clientid")
+            .secret("secret")
+            .customEntraIdAuthenticationSupplier(() -> mock(IAuthenticationResult.class))
+            .build());
+    }
+
 
     // T.1.2
     // Implement a stubbed IdentityProvider and verify that the TokenManager works normally and handles:
@@ -529,6 +554,7 @@ public class EntraIDUnitTests {
         int maxAttemptsToRetry = 6;
         int tokenRequestExecTimeoutInMs = 401;
         TokenAuthConfig tokenAuthConfig = EntraIDTokenAuthConfigBuilder.builder()
+                .clientId("testClientId").secret("testSecret")
                 .expirationRefreshRatio(refreshRatio).delayInMsToRetry(delayInMsToRetry)
                 .lowerRefreshBoundMillis(lowerRefreshBoundMillis)
                 .maxAttemptsToRetry(maxAttemptsToRetry)
