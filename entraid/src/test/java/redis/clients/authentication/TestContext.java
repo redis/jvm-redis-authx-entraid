@@ -19,13 +19,13 @@ import java.security.spec.PKCS8EncodedKeySpec;
 
 public class TestContext {
 
-    private static final String AZURE_CLIENT_ID = "AZURE_CLIENT_ID";
-    private static final String AZURE_AUTHORITY = "AZURE_AUTHORITY";
-    private static final String AZURE_CLIENT_SECRET = "AZURE_CLIENT_SECRET";
-    private static final String AZURE_PRIVATE_KEY = "AZURE_PRIVATE_KEY";
-    private static final String AZURE_CERT = "AZURE_CERT";
-    private static final String AZURE_REDIS_SCOPES = "AZURE_REDIS_SCOPES";
-    private static final String AZURE_USER_ASSIGNED_MANAGED_IDENTITY_CLIENT_ID = "AZURE_USER_ASSIGNED_MANAGED_IDENTITY_CLIENT_ID";
+    public static final String AZURE_CLIENT_ID = "AZURE_CLIENT_ID";
+    public static final String AZURE_AUTHORITY = "AZURE_AUTHORITY";
+    public static final String AZURE_CLIENT_SECRET = "AZURE_CLIENT_SECRET";
+    public static final String AZURE_PRIVATE_KEY = "AZURE_PRIVATE_KEY";
+    public static final String AZURE_CERT = "AZURE_CERT";
+    public static final String AZURE_REDIS_SCOPES = "AZURE_REDIS_SCOPES";
+    public static final String AZURE_USER_ASSIGNED_MANAGED_IDENTITY_CLIENT_ID = "AZURE_USER_ASSIGNED_MANAGED_IDENTITY_CLIENT_ID";
 
     private String clientId;
     private String authority;
