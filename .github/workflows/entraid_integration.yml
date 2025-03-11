@@ -34,7 +34,7 @@ jobs:
           java-version: '8'
           distribution: 'temurin'
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ~/.m2/repository
@@ -64,3 +64,4 @@ jobs:
           AZURE_CERT: ${{secrets.AZURE_CERT}}
           AZURE_PRIVATE_KEY: ${{secrets.AZURE_PRIVATE_KEY}}
           AZURE_REDIS_SCOPES: ${{secrets.AZURE_REDIS_SCOPES}}
+          AZURE_TENANT_ID: ${{secrets.AZURE_TENANT_ID}}
