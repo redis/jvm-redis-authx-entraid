@@ -87,8 +87,7 @@ public class EntraIDUnitTests {
     private static final long TOKEN_ISSUE_TIME = System.currentTimeMillis();
     private static final String TOKEN_OID = "user1";
 
-    private Token simpleToken = new SimpleToken(TOKEN_OID, TOKEN_VALUE, TOKEN_EXPIRATION_TIME,
-            TOKEN_ISSUE_TIME, null);
+    private Token simpleToken = new SimpleToken(TOKEN_OID, TOKEN_VALUE, TOKEN_EXPIRATION_TIME, TOKEN_ISSUE_TIME, null);
 
     private TestContext testCtx = TestContext.DEFAULT;
 
@@ -98,9 +97,8 @@ public class EntraIDUnitTests {
         String clientId = "clientId1";
         String credential = "credential1";
         Set<String> scopes = Collections.singleton("scope1");
-        IdentityProviderConfig configWithSecret = EntraIDTokenAuthConfigBuilder.builder()
-                .authority(authority).clientId(clientId).secret(credential).scopes(scopes).build()
-                .getIdentityProviderConfig();
+        IdentityProviderConfig configWithSecret = EntraIDTokenAuthConfigBuilder.builder().authority(authority)
+                .clientId(clientId).secret(credential).scopes(scopes).build().getIdentityProviderConfig();
         assertNotNull(configWithSecret);
         try (MockedConstruction<EntraIDIdentityProvider> mockedConstructor = mockConstruction(
             EntraIDIdentityProvider.class, (mock, context) -> {
@@ -114,9 +112,8 @@ public class EntraIDUnitTests {
             configWithSecret.getProvider();
         }
 
-        IdentityProviderConfig configWithCert = EntraIDTokenAuthConfigBuilder.builder()
-                .authority(authority).clientId(clientId)
-                .key(testCtx.getPrivateKey(), testCtx.getCert()).scopes(scopes).build()
+        IdentityProviderConfig configWithCert = EntraIDTokenAuthConfigBuilder.builder().authority(authority)
+                .clientId(clientId).key(testCtx.getPrivateKey(), testCtx.getCert()).scopes(scopes).build()
                 .getIdentityProviderConfig();
         assertNotNull(configWithCert);
         try (MockedConstruction<EntraIDIdentityProvider> mockedConstructor = mockConstruction(
@@ -138,8 +135,7 @@ public class EntraIDUnitTests {
         try (MockedConstruction<EntraIDIdentityProvider> mockedConstructor = mockConstruction(
             EntraIDIdentityProvider.class, (mock, context) -> {
                 ManagedIdentityInfo info = (ManagedIdentityInfo) context.arguments().get(0);
-                assertEquals(ManagedIdentityId.systemAssigned().getIdType(),
-                    info.getId().getIdType());
+                assertEquals(ManagedIdentityId.systemAssigned().getIdType(), info.getId().getIdType());
                 assertEquals(scopes, context.arguments().get(1));
             })) {
             configWithManagedId.getProvider();
@@ -150,23 +146,16 @@ public class EntraIDUnitTests {
     public void testConfigBuilderThrowsErrorIfMissconfigured() {
 
         // Missing Configuration
-        assertThrows(RedisEntraIDException.class,() -> EntraIDTokenAuthConfigBuilder.builder().build());
+        assertThrows(RedisEntraIDException.class, () -> EntraIDTokenAuthConfigBuilder.builder().build());
 
         // spi & mpi configured
-        assertThrows(RedisEntraIDException.class,() -> EntraIDTokenAuthConfigBuilder.builder()
-            .clientId("clientid")
-            .secret("secret")
-            .systemAssignedManagedIdentity()
-            .build());
+        assertThrows(RedisEntraIDException.class, () -> EntraIDTokenAuthConfigBuilder.builder().clientId("clientid")
+                .secret("secret").systemAssignedManagedIdentity().build());
 
-        // spi || mpi  && customEntraIdAuthenticationSupplier configured
-        assertThrows(RedisEntraIDException.class,() -> EntraIDTokenAuthConfigBuilder.builder()
-            .clientId("clientid")
-            .secret("secret")
-            .customEntraIdAuthenticationSupplier(() -> mock(IAuthenticationResult.class))
-            .build());
+        // spi || mpi && customEntraIdAuthenticationSupplier configured
+        assertThrows(RedisEntraIDException.class, () -> EntraIDTokenAuthConfigBuilder.builder().clientId("clientid")
+                .secret("secret").customEntraIdAuthenticationSupplier(() -> mock(IAuthenticationResult.class)).build());
     }
-
 
     // T.1.2
     // Implement a stubbed IdentityProvider and verify that the TokenManager works normally and handles:
@@ -204,8 +193,7 @@ public class EntraIDUnitTests {
         };
 
         TokenManagerConfig tokenManagerConfig = new TokenManagerConfig(EXPIRATION_REFRESH_RATIO,
-                LOWER_REFRESH_BOUND_MILLIS, 60 * 60 * 1000,
-                this.tokenManagerConfig.getRetryPolicy());
+                LOWER_REFRESH_BOUND_MILLIS, 60 * 60 * 1000, this.tokenManagerConfig.getRetryPolicy());
 
         TokenListener listener = mock(TokenListener.class);
         TokenManager tokenManager = new TokenManager(identityProvider, tokenManagerConfig);
@@ -288,7 +276,8 @@ public class EntraIDUnitTests {
     }
 
     // T.2.2
-    // Verify that tokens are automatically renewed in the background and listeners are notified asynchronously without user intervention.
+    // Verify that tokens are automatically renewed in the background and listeners are notified asynchronously without
+    // user intervention.
     @Test
     public void backgroundTokenRenewalTest() throws InterruptedException, TimeoutException {
         AtomicInteger numberOfTokens = new AtomicInteger(0);
@@ -338,8 +327,8 @@ public class EntraIDUnitTests {
 
         tokenManager.start(listener, false);
 
-        Awaitility.await().pollInterval(ONE_HUNDRED_MILLISECONDS).atMost(TWO_SECONDS)
-                .until(() -> numberOfErrors.get(), is(1));
+        Awaitility.await().pollInterval(ONE_HUNDRED_MILLISECONDS).atMost(TWO_SECONDS).until(() -> numberOfErrors.get(),
+            is(1));
     }
 
     // T.2.3
@@ -379,8 +368,7 @@ public class EntraIDUnitTests {
         Integer upper = (int) (tokenManagerConfig.getExpirationRefreshRatio() * 1000 + 10);
         Awaitility.await().pollInterval(ONE_HUNDRED_MILLISECONDS).atMost(Durations.TWO_SECONDS)
                 .until(() -> numberOfTokens.get(), is(2));
-        assertThat((Integer) timeDiff.get(),
-            both(greaterThanOrEqualTo(lower)).and(lessThanOrEqualTo(upper)));
+        assertThat((Integer) timeDiff.get(), both(greaterThanOrEqualTo(lower)).and(lessThanOrEqualTo(upper)));
     }
 
     // T.2.3
@@ -395,8 +383,7 @@ public class EntraIDUnitTests {
         IdentityProvider identityProvider = () -> new SimpleToken(TOKEN_OID, TOKEN_VALUE,
                 System.currentTimeMillis() + validDurationInMs, System.currentTimeMillis(), null);
 
-        TokenManagerConfig tokenManagerConfig = new TokenManagerConfig(0.99F, 0,
-                TOKEN_REQUEST_EXEC_TIMEOUT,
+        TokenManagerConfig tokenManagerConfig = new TokenManagerConfig(0.99F, 0, TOKEN_REQUEST_EXEC_TIMEOUT,
                 new TokenManagerConfig.RetryPolicy(RETRY_POLICY_MAX_ATTEMPTS, RETRY_POLICY_DELAY));
 
         TokenManager tokenManager = new TokenManager(identityProvider, tokenManagerConfig);
@@ -414,8 +401,8 @@ public class EntraIDUnitTests {
 
         tokenManager.start(listener, false);
 
-        Awaitility.await().pollInterval(Duration.ofMillis(10)).atMost(Durations.TWO_SECONDS)
-                .until(() -> tokens.size(), is(2));
+        Awaitility.await().pollInterval(Duration.ofMillis(10)).atMost(Durations.TWO_SECONDS).until(() -> tokens.size(),
+            is(2));
 
         Token initialToken = tokens.get(0);
         Token secondToken = tokens.get(1);
@@ -423,8 +410,7 @@ public class EntraIDUnitTests {
                 + (long) (validDurationInMs * tokenManagerConfig.getExpirationRefreshRatio());
         Long renewalWindowEnd = initialToken.getExpiresAt();
         assertThat((Long) secondToken.getReceivedAt(),
-            both(greaterThanOrEqualTo(renewalWindowStart))
-                    .and(lessThanOrEqualTo(renewalWindowEnd)));
+            both(greaterThanOrEqualTo(renewalWindowStart)).and(lessThanOrEqualTo(renewalWindowEnd)));
     }
 
     // T.2.3
@@ -439,8 +425,7 @@ public class EntraIDUnitTests {
         IdentityProvider identityProvider = () -> new SimpleToken(TOKEN_OID, TOKEN_VALUE,
                 System.currentTimeMillis() + validDurationInMs, System.currentTimeMillis(), null);
 
-        TokenManagerConfig tokenManagerConfig = new TokenManagerConfig(0.01F, 0,
-                TOKEN_REQUEST_EXEC_TIMEOUT,
+        TokenManagerConfig tokenManagerConfig = new TokenManagerConfig(0.01F, 0, TOKEN_REQUEST_EXEC_TIMEOUT,
                 new TokenManagerConfig.RetryPolicy(RETRY_POLICY_MAX_ATTEMPTS, RETRY_POLICY_DELAY));
 
         TokenManager tokenManager = new TokenManager(identityProvider, tokenManagerConfig);
@@ -458,8 +443,8 @@ public class EntraIDUnitTests {
 
         tokenManager.start(listener, false);
 
-        Awaitility.await().pollInterval(ONE_MILLISECOND).atMost(Durations.TWO_SECONDS)
-                .until(() -> tokens.size(), is(2));
+        Awaitility.await().pollInterval(ONE_MILLISECOND).atMost(Durations.TWO_SECONDS).until(() -> tokens.size(),
+            is(2));
 
         Token initialToken = tokens.get(0);
         Token secondToken = tokens.get(1);
@@ -467,20 +452,19 @@ public class EntraIDUnitTests {
                 + (long) (validDurationInMs * tokenManagerConfig.getExpirationRefreshRatio());
         Long renewalWindowEnd = initialToken.getExpiresAt();
         assertThat((Long) secondToken.getReceivedAt(),
-            both(greaterThanOrEqualTo(renewalWindowStart))
-                    .and(lessThanOrEqualTo(renewalWindowEnd)));
+            both(greaterThanOrEqualTo(renewalWindowStart)).and(lessThanOrEqualTo(renewalWindowEnd)));
     }
 
     // T.2.4
     // Confirm that the system correctly identifies expired tokens. (isExpired works)
     @Test
     public void expiredTokenCheckTest() {
-        String token = JWT.create().withExpiresAt(new Date(System.currentTimeMillis() - 1000))
-                .withClaim("oid", "user1").sign(Algorithm.none());
+        String token = JWT.create().withExpiresAt(new Date(System.currentTimeMillis() - 1000)).withClaim("oid", "user1")
+                .sign(Algorithm.none());
         assertTrue(new JWToken(token).isExpired());
 
-        token = JWT.create().withExpiresAt(new Date(System.currentTimeMillis() + 1000))
-                .withClaim("oid", "user1").sign(Algorithm.none());
+        token = JWT.create().withExpiresAt(new Date(System.currentTimeMillis() + 1000)).withClaim("oid", "user1")
+                .sign(Algorithm.none());
 
         assertFalse(new JWToken(token).isExpired());
     }
@@ -497,15 +481,14 @@ public class EntraIDUnitTests {
 
         assertEquals(token, actual.getValue());
         assertEquals(aSecondBefore, actual.getExpiresAt());
-        assertThat((Long) (System.currentTimeMillis() - actual.getReceivedAt()),
-            lessThanOrEqualTo((Long) 10L));
+        assertThat((Long) (System.currentTimeMillis() - actual.getReceivedAt()), lessThanOrEqualTo((Long) 10L));
     }
 
     // T.2.5
     // Ensure that token objects are immutable and cannot be modified after creation.
     @Test
     public void tokenImmutabilityTest() {
-        // TODO :  what is expected exatcly ?
+        // TODO : what is expected exatcly ?
     }
 
     // T.3.1
@@ -532,8 +515,8 @@ public class EntraIDUnitTests {
 
         AtomicInteger numberOfTokens = new AtomicInteger(0);
         IdentityProvider identityProvider = () -> {
-            return new SimpleToken("user1", "" + numberOfTokens.incrementAndGet(),
-                    System.currentTimeMillis() + 500, System.currentTimeMillis(), null);
+            return new SimpleToken("user1", "" + numberOfTokens.incrementAndGet(), System.currentTimeMillis() + 500,
+                    System.currentTimeMillis(), null);
         };
         TokenManager tokenManager = new TokenManager(identityProvider, tokenManagerConfig);
         assertNull(tokenManager.getCurrentToken());
@@ -553,11 +536,9 @@ public class EntraIDUnitTests {
         int lowerRefreshBoundMillis = 301;
         int maxAttemptsToRetry = 6;
         int tokenRequestExecTimeoutInMs = 401;
-        TokenAuthConfig tokenAuthConfig = EntraIDTokenAuthConfigBuilder.builder()
-                .clientId("testClientId").secret("testSecret")
-                .expirationRefreshRatio(refreshRatio).delayInMsToRetry(delayInMsToRetry)
-                .lowerRefreshBoundMillis(lowerRefreshBoundMillis)
-                .maxAttemptsToRetry(maxAttemptsToRetry)
+        TokenAuthConfig tokenAuthConfig = EntraIDTokenAuthConfigBuilder.builder().clientId("testClientId")
+                .secret("testSecret").expirationRefreshRatio(refreshRatio).delayInMsToRetry(delayInMsToRetry)
+                .lowerRefreshBoundMillis(lowerRefreshBoundMillis).maxAttemptsToRetry(maxAttemptsToRetry)
                 .tokenRequestExecTimeoutInMs(tokenRequestExecTimeoutInMs).build();
         TokenManagerConfig config = tokenAuthConfig.getTokenManagerConfig();
         assertEquals(refreshRatio, config.getExpirationRefreshRatio(), 0.00000001F);
@@ -583,9 +564,8 @@ public class EntraIDUnitTests {
                 assertEquals(cert, info.getCert());
                 assertEquals(scopes, context.arguments().get(1));
             })) {
-            TokenAuthConfig config = EntraIDTokenAuthConfigBuilder.builder()
-                    .clientId("testClientId").authority("testAuthority").key(key, cert)
-                    .scopes(scopes).build();
+            TokenAuthConfig config = EntraIDTokenAuthConfigBuilder.builder().clientId("testClientId")
+                    .authority("testAuthority").key(key, cert).scopes(scopes).build();
             config.getIdentityProviderConfig().getProvider();
         }
     }
@@ -602,11 +582,10 @@ public class EntraIDUnitTests {
                 assertEquals("testUserManagedId", info.getId().getUserAssignedId());
                 assertEquals(scopes, context.arguments().get(1));
             })) {
-            TokenAuthConfig config = EntraIDTokenAuthConfigBuilder.builder()
-                    .clientId("testClientId").authority("testAuthority")
-                    .userAssignedManagedIdentity(UserManagedIdentityType.CLIENT_ID,
-                        "testUserManagedId")
-                    .scopes(scopes).build();
+            TokenAuthConfig config = EntraIDTokenAuthConfigBuilder.builder().clientId("testClientId")
+                    .authority("testAuthority")
+                    .userAssignedManagedIdentity(UserManagedIdentityType.CLIENT_ID, "testUserManagedId").scopes(scopes)
+                    .build();
             config.getIdentityProviderConfig().getProvider();
         }
     }
@@ -617,11 +596,11 @@ public class EntraIDUnitTests {
     public void customProviderConfigTest() {
         IClientSecret secret = ClientCredentialFactory.createFromSecret(testCtx.getClientSecret());
         // Choose and configure any type of app with any parameters as needed
-        ConfidentialClientApplication app = ConfidentialClientApplication
-                .builder(testCtx.getClientId(), secret).build();
+        ConfidentialClientApplication app = ConfidentialClientApplication.builder(testCtx.getClientId(), secret)
+                .build();
         // Customize credential parameters as needed
-        ClientCredentialParameters parameters = ClientCredentialParameters
-                .builder(Collections.singleton("testScope")).build();
+        ClientCredentialParameters parameters = ClientCredentialParameters.builder(Collections.singleton("testScope"))
+                .build();
         Supplier<IAuthenticationResult> supplier = () -> {
             try {
                 return app.acquireToken(parameters).get();

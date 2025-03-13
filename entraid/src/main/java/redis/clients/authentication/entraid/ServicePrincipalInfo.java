@@ -29,8 +29,7 @@ public class ServicePrincipalInfo {
         accessWith = ServicePrincipalAccess.WithSecret;
     }
 
-    public ServicePrincipalInfo(String clientId, PrivateKey key, X509Certificate cert,
-            String authority) {
+    public ServicePrincipalInfo(String clientId, PrivateKey key, X509Certificate cert, String authority) {
         this.clientId = clientId;
         this.key = key;
         this.cert = cert;

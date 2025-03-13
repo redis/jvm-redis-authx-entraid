@@ -26,8 +26,7 @@ public final class EntraIDIdentityProviderConfig implements IdentityProviderConf
         providerSupplier = () -> new EntraIDIdentityProvider(info, scopes, timeout);
     }
 
-    public EntraIDIdentityProviderConfig(
-            Supplier<IAuthenticationResult> customEntraIdAuthenticationSupplier) {
+    public EntraIDIdentityProviderConfig(Supplier<IAuthenticationResult> customEntraIdAuthenticationSupplier) {
         providerSupplier = () -> new EntraIDIdentityProvider(customEntraIdAuthenticationSupplier);
     }
 

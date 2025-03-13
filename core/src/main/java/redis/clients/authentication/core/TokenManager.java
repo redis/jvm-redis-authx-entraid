@@ -28,8 +28,7 @@ public class TokenManager {
         maxRetries = tokenManagerConfig.getRetryPolicy().getMaxAttempts();
         retryDelay = tokenManagerConfig.getRetryPolicy().getdelayInMs();
         renewalScheduler = new RenewalScheduler(this::renewToken);
-        dispatcher = new Dispatcher(identityProvider,
-                tokenManagerConfig.getTokenRequestExecTimeoutInMs());
+        dispatcher = new Dispatcher(identityProvider, tokenManagerConfig.getTokenRequestExecTimeoutInMs());
     }
 
     /**
@@ -158,8 +157,7 @@ public class TokenManager {
      */
     protected long ttlForRatioRefresh(long expireDate, long issueDate) {
         long totalLifetime = expireDate - issueDate;
-        long intendedUsageDuration = (long) (totalLifetime
-                * tokenManagerConfig.getExpirationRefreshRatio());
+        long intendedUsageDuration = (long) (totalLifetime * tokenManagerConfig.getExpirationRefreshRatio());
         long startOfRenewalZone = issueDate + intendedUsageDuration;
         return startOfRenewalZone - System.currentTimeMillis(); // TTL to renewal zone
     }

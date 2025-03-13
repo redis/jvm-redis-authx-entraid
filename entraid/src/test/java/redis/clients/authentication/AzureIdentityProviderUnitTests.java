@@ -42,12 +42,11 @@ public class AzureIdentityProviderUnitTests {
         int timeout = 2000;
 
         try (MockedConstruction<AzureIdentityProviderConfig> mockedConstructor = mockConstruction(
-                AzureIdentityProviderConfig.class,
-                (mock, context) -> {
-                    assertEquals(mockCredential, context.arguments().get(0));
-                    assertEquals(scopes, context.arguments().get(1));
-                    assertEquals(timeout, context.arguments().get(2));
-                })) {
+            AzureIdentityProviderConfig.class, (mock, context) -> {
+                assertEquals(mockCredential, context.arguments().get(0));
+                assertEquals(scopes, context.arguments().get(1));
+                assertEquals(timeout, context.arguments().get(2));
+            })) {
             AzureTokenAuthConfigBuilder.builder().defaultAzureCredential(mockCredential).scopes(scopes)
                     .tokenRequestExecTimeoutInMs(timeout).build();
         }
@@ -58,29 +57,27 @@ public class AzureIdentityProviderUnitTests {
         Set<String> scopes = AzureTokenAuthConfigBuilder.DEFAULT_SCOPES;
         int timeout = 2000;
 
-        try (MockedConstruction<AzureIdentityProvider> mockedConstructor = mockConstruction(
-                AzureIdentityProvider.class,
-                (mock, context) -> {
-                    assertEquals(mockCredential, context.arguments().get(0));
-                    assertEquals(scopes, context.arguments().get(1));
-                    assertEquals(timeout, context.arguments().get(2));
-                })) {
+        try (MockedConstruction<AzureIdentityProvider> mockedConstructor = mockConstruction(AzureIdentityProvider.class,
+            (mock, context) -> {
+                assertEquals(mockCredential, context.arguments().get(0));
+                assertEquals(scopes, context.arguments().get(1));
+                assertEquals(timeout, context.arguments().get(2));
+            })) {
             new AzureIdentityProviderConfig(mockCredential, scopes, timeout).getProvider();
         }
     }
 
     @Test
     public void testRequestWithMockCredential() {
-        String token = JWT.create().withExpiresAt(new Date(System.currentTimeMillis()
-                - 1000))
-                .withClaim("oid", "user1").sign(Algorithm.none());
+        String token = JWT.create().withExpiresAt(new Date(System.currentTimeMillis() - 1000)).withClaim("oid", "user1")
+                .sign(Algorithm.none());
 
         AccessToken t = new AccessToken(token, OffsetDateTime.now());
         Mono<AccessToken> monoToken = Mono.just(t);
         DefaultAzureCredential mockCredential = mock(DefaultAzureCredential.class);
         when(mockCredential.getToken(any(TokenRequestContext.class))).thenReturn(monoToken);
-        new AzureIdentityProviderConfig(mockCredential,
-                AzureTokenAuthConfigBuilder.DEFAULT_SCOPES, 0).getProvider().requestToken();
+        new AzureIdentityProviderConfig(mockCredential, AzureTokenAuthConfigBuilder.DEFAULT_SCOPES, 0).getProvider()
+                .requestToken();
 
         ArgumentCaptor<TokenRequestContext> argument = ArgumentCaptor.forClass(TokenRequestContext.class);
 

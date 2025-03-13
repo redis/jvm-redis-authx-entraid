@@ -17,8 +17,7 @@ public class ManagedIdentityInfo {
     }
 
     public enum UserManagedIdentityType {
-        CLIENT_ID(ManagedIdentityId::userAssignedClientId),
-        OBJECT_ID(ManagedIdentityId::userAssignedObjectId),
+        CLIENT_ID(ManagedIdentityId::userAssignedClientId), OBJECT_ID(ManagedIdentityId::userAssignedObjectId),
         RESOURCE_ID(ManagedIdentityId::userAssignedResourceId);
 
         private final Function<String, ManagedIdentityId> func;
@@ -50,7 +49,6 @@ public class ManagedIdentityInfo {
             return userManagedIdentityType.func.apply(id);
         }
         // this never happens
-        throw new UnsupportedOperationException(
-                "Operation not supported for the given identity type");
+        throw new UnsupportedOperationException("Operation not supported for the given identity type");
     }
 }
