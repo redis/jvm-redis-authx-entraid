@@ -10,7 +10,7 @@
   <packaging>jar</packaging>
   <groupId>redis.clients.authentication</groupId>
   <artifactId>redis-authx-core</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.1-SNAPSHOT</version>
   <description>Redis AuthX Core is the core lib of an extension for Redis Java  Clients to support token-based authentication.</description>
 	<url>https://github.com/redis/redis-authx-core</url>
 

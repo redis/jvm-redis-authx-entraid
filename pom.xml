@@ -10,7 +10,7 @@
 	<packaging>pom</packaging>
 	<groupId>redis.clients.authentication</groupId>
 	<artifactId>redis-authx</artifactId>
-	<version>0.1.0</version>
+	<version>0.1.1-SNAPSHOT</version>
 	<name>redis-authx</name>
 
 	<modules>
