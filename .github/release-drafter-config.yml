@@ -3,6 +3,9 @@ tag-template: 'v$NEXT_MINOR_VERSION'
 paginatePath: repository.pullRequests
 filter-by-commitish: true
 commitish: master
+references:
+  base: a40711497d16821f37093ed8f2013068bfb3545a
+  head: master
 autolabeler:
   - label: 'maintenance'
     files:
