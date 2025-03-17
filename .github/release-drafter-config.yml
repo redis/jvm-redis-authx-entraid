@@ -1,5 +1,6 @@
 name-template: '$NEXT_MINOR_VERSION'
 tag-template: 'v$NEXT_MINOR_VERSION'
+paginatePath: repository.pullRequests
 filter-by-commitish: true
 commitish: master
 autolabeler:
