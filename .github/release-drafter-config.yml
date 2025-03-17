@@ -1,5 +1,5 @@
-name-template: '$NEXT_MINOR_VERSION'
-tag-template: 'v$NEXT_MINOR_VERSION'
+name-template: '0.1.1-beta2'
+tag-template: 'v0.1.1-beta2'
 paginatePath: repository.pullRequests
 filter-by-commitish: true
 commitish: master
