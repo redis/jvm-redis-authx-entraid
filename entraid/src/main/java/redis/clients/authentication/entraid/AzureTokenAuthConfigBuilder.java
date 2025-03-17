@@ -109,7 +109,10 @@ public class AzureTokenAuthConfigBuilder extends TokenAuthConfig.Builder<AzureTo
                 .maxAttemptsToRetry(tokenManagerConfig.getRetryPolicy().getMaxAttempts())
                 .delayInMsToRetry(tokenManagerConfig.getRetryPolicy().getdelayInMs())
                 .identityProviderConfig(tokenAuthConfig.getIdentityProviderConfig());
+
+        builder.defaultAzureCredential = sample.defaultAzureCredential;
         builder.scopes = sample.scopes;
+        builder.tokenRequestExecTimeoutInMs = sample.tokenRequestExecTimeoutInMs;
         return builder;
     }
 }
