@@ -17,7 +17,7 @@ jobs:
         run: |
           realversion="${GITHUB_REF/refs\/tags\//}"
           realversion="${realversion//v/}"
-          echo "VERSION=$realversion" >> $GITHUB_OUTPUT
+          echo "VERSION=0.1.1-beta2" >> $GITHUB_OUTPUT
 
       - name: Set up publishing to maven central
         uses: actions/setup-java@v2
