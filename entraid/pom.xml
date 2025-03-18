@@ -10,7 +10,7 @@
   <packaging>jar</packaging>
   <groupId>redis.clients.authentication</groupId>
   <artifactId>redis-authx-entraid</artifactId>
-  <version>0.1.1-SNAPSHOT</version>
+  <version>0.1.1-beta2</version>
   <description>Redis AuthX EntraID is an extension for Redis Java  Clients to support token-based authentication with Microsoft EntraID.</description>
 	<url>https://github.com/redis/redis-authx-entraid</url>
 
@@ -41,7 +41,7 @@
 		<connection>scm:git:git@github.com:redis/redis-authx-entraid.git</connection>
 		<url>scm:git:git@github.com:redis/redis-authx-entraid.git</url>
 		<developerConnection>scm:git:git@github.com:redis/redis-authx-entraid.git</developerConnection>
-		<tag>entraid-0.1.0</tag>
+		<tag>redis-authx-entraid-0.1.1</tag>
 	</scm>
 
 	<properties>
@@ -60,7 +60,7 @@
 	<dependency>
 		<groupId>redis.clients.authentication</groupId>
 		<artifactId>redis-authx-core</artifactId>
-		<version>0.1.0-SNAPSHOT</version>
+		<version>0.1.1-beta2</version>
 	</dependency>
 	<dependency>
 		<groupId>com.microsoft.azure</groupId>
