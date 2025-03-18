@@ -41,7 +41,7 @@
 		<connection>scm:git:git@github.com:redis/redis-authx-entraid.git</connection>
 		<url>scm:git:git@github.com:redis/redis-authx-entraid.git</url>
 		<developerConnection>scm:git:git@github.com:redis/redis-authx-entraid.git</developerConnection>
-		<tag>entraid-0.1.0</tag>
+		<tag>redis-authx-entraid-${project.version}</tag>
 	</scm>
 
 	<properties>
@@ -60,7 +60,7 @@
 	<dependency>
 		<groupId>redis.clients.authentication</groupId>
 		<artifactId>redis-authx-core</artifactId>
-		<version>0.1.0-SNAPSHOT</version>
+		<version>${project.version}</version>
 	</dependency>
 	<dependency>
 		<groupId>com.microsoft.azure</groupId>
