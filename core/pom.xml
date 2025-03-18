@@ -41,7 +41,7 @@
 		<connection>scm:git:git@github.com:redis/redis-authx-core.git</connection>
 		<url>scm:git:git@github.com:redis/redis-authx-core.git</url>
 		<developerConnection>scm:git:git@github.com:redis/redis-authx-core.git</developerConnection>
-		<tag>redis-authx-core-0.1.0</tag>
+		<tag>redis-authx-core-${project.version}</tag>
 	</scm>
 
 	<properties>
