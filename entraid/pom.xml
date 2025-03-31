@@ -47,7 +47,7 @@
 	<properties>
 		<github.global.server>github</github.global.server>
 		<entraid.module.name>redis.clients.authentication.entraid</entraid.module.name>
-		<maven.surefire.version>3.5.2</maven.surefire.version>
+		<maven.surefire.version>3.5.3</maven.surefire.version>
 	</properties>
 
   <dependencies>
