@@ -71,14 +71,9 @@
 		<version>${project.version}</version>
 	</dependency>
 	<dependency>
-		<groupId>com.microsoft.azure</groupId>
-		<artifactId>msal4j</artifactId>
-		<version>1.19.1</version>
-	</dependency>
-	<dependency>
 		<groupId>com.azure</groupId>
 		<artifactId>azure-identity</artifactId>
-		<version>1.15.4</version>
+		<version>1.16.3</version>
 	</dependency>
     <dependency>
 		<groupId>junit</groupId>

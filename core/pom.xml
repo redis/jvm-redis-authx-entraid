@@ -57,7 +57,7 @@
 		<core.module.name>redis.clients.authentication.core</core.module.name>
 		<slf4j.version>1.7.36</slf4j.version>
 		<resilience4j.version>1.7.1</resilience4j.version>
-		<jackson.version>2.18.0</jackson.version>
+		<jackson.version>2.18.2</jackson.version>
 		<maven.surefire.version>3.5.2</maven.surefire.version>
 	</properties>
 
@@ -222,7 +222,7 @@
 					<archive>
 						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
 						<manifestEntries>
-							<Automatic-Module-Name>${core.module.name}</Automatic-Module-Name>
+							<Auatomatic-Module-Name>${core.module.name}</Auatomatic-Module-Name>
 						</manifestEntries>
 					</archive>
 				</configuration>
