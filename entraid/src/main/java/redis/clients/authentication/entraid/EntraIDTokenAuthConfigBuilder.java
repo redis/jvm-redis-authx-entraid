@@ -22,7 +22,7 @@ import redis.clients.authentication.entraid.ServicePrincipalInfo.ServicePrincipa
  * Builder class for configuring EntraID token authentication.
  * This class provides methods to set various configuration options for EntraID token authentication.
  * It extends the TokenAuthConfig.Builder class and implements AutoCloseable.
- * 
+ *
  * <p>Default values:</p>
  * <ul>
  *   <li>DEFAULT_EXPIRATION_REFRESH_RATIO: 0.75F</li>
@@ -31,22 +31,22 @@ import redis.clients.authentication.entraid.ServicePrincipalInfo.ServicePrincipa
  *   <li>DEFAULT_MAX_ATTEMPTS_TO_RETRY: 5</li>
  *   <li>DEFAULT_DELAY_IN_MS_TO_RETRY: 100 (0.1 second)</li>
  * </ul>
- * 
+ *
  * <p>Configuration options:</p>
  * <ul>
  *   <li>{@link #clientId(String)}: Sets the client ID.</li>
  *   <li>{@link #secret(String)}: Sets the client secret and configures access with secret.</li>
- *   <li>{@link #key(PrivateKey, X509Certificate)}: Sets the private key and certificate, 
+ *   <li>{@link #key(PrivateKey, X509Certificate)}: Sets the private key and certificate,
  *      and configures access with certificate.</li>
  *   <li>{@link #authority(String)}: Sets the authority URL.</li>
  *   <li>{@link #systemAssignedManagedIdentity()}: Configures system-assigned managed identity.</li>
- *   <li>{@link #userAssignedManagedIdentity(UserManagedIdentityType, String)}: 
+ *   <li>{@link #userAssignedManagedIdentity(UserManagedIdentityType, String)}:
  *      Configures user-assigned managed identity.</li>
  *   <li>{@link #customEntraIdAuthenticationSupplier(Supplier)}: Sets a custom authentication supplier.</li>
  *   <li>{@link #scopes(Set)}: Sets the scopes for the token request.</li>
  *   <li>{@link #tokenRequestExecTimeoutInMs(int)}: Sets the token request execution timeout in milliseconds.</li>
  * </ul>
- * 
+ *
  * <p>Usage:</p>
  * <pre>
  * {@code
@@ -58,7 +58,7 @@ import redis.clients.authentication.entraid.ServicePrincipalInfo.ServicePrincipa
  *     .build();
  * }
  * </pre>
- * 
+ *
  * <p>Note:</p>
  * <ul>
  *   <li>Only one of ServicePrincipal, ManagedIdentity or customEntraIdAuthenticationSupplier can be configured.</li>
@@ -67,10 +67,10 @@ import redis.clients.authentication.entraid.ServicePrincipalInfo.ServicePrincipa
  * For more information and details on how to use, please see:
  * <p>https://github.com/redis/jedis/blob/master/docs/advanced-usage.md#token-based-authentication
  * <p>https://github.com/redis/lettuce/blob/main/docs/user-guide/connecting-redis.md#microsoft-entra-id-authentication
- * 
+ *
  * @see TokenAuthConfig.Builder
  * @see AutoCloseable
- * 
+ *
  */
 public class EntraIDTokenAuthConfigBuilder extends TokenAuthConfig.Builder<EntraIDTokenAuthConfigBuilder>
         implements AutoCloseable {
@@ -187,7 +187,7 @@ public class EntraIDTokenAuthConfigBuilder extends TokenAuthConfig.Builder<Entra
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         clientId = null;
         secret = null;
         key = null;
