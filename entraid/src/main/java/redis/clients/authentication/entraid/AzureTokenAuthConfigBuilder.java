@@ -49,7 +49,7 @@ public class AzureTokenAuthConfigBuilder extends TokenAuthConfig.Builder<AzureTo
         implements AutoCloseable {
     public static final float DEFAULT_EXPIRATION_REFRESH_RATIO = 0.75F;
     public static final int DEFAULT_LOWER_REFRESH_BOUND_MILLIS = 2 * 60 * 1000;
-    public static final int DEFAULT_TOKEN_REQUEST_EXECUTION_TIMEOUT_IN_MS = 1000;
+    public static final int DEFAULT_TOKEN_REQUEST_EXECUTION_TIMEOUT_IN_MS = 3000;
     public static final int DEFAULT_MAX_ATTEMPTS_TO_RETRY = 5;
     public static final int DEFAULT_DELAY_IN_MS_TO_RETRY = 100;
     public static final Set<String> DEFAULT_SCOPES = Collections.singleton("https://redis.azure.com/.default");
