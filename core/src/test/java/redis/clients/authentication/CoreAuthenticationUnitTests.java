@@ -23,6 +23,7 @@ import static org.mockito.Mockito.verify;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -252,6 +253,63 @@ public class CoreAuthenticationUnitTests {
         await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
             verify(listener, times(1)).onTokenRenewed(any());
         });
+    }
+
+    @Test
+    public void testMaxRetriesExhausted() throws InterruptedException {
+        int maxRetries = 3;
+        int totalExpectedAttempts = maxRetries + 1;
+        CountDownLatch allAttemptsLatch = new CountDownLatch(totalExpectedAttempts);
+
+        IdentityProvider identityProvider = mock(IdentityProvider.class);
+        when(identityProvider.requestToken()).thenAnswer(invocation -> {
+            allAttemptsLatch.countDown();
+            throw new RuntimeException("Token request failed!");
+        });
+
+        TokenListener listener = mock(TokenListener.class);
+        TokenManager tokenManager = new TokenManager(identityProvider,
+                new TokenManagerConfig(0.7F, 200, 2000, new RetryPolicy(maxRetries, 50)));
+
+        tokenManager.start(listener, false);
+        allAttemptsLatch.await(5, TimeUnit.SECONDS);
+        delay(200);
+
+        verify(identityProvider, times(totalExpectedAttempts)).requestToken();
+        verify(listener, times(1)).onError(any());
+        verify(listener, never()).onTokenRenewed(any());
+    }
+
+    @Test
+    public void testRetriesCounterResetAfterSuccess() throws InterruptedException {
+        int maxRetries = 2;
+        int attemptsPerCycle = maxRetries + 1;
+        CountDownLatch successLatch = new CountDownLatch(2);
+        AtomicInteger callCount = new AtomicInteger(0);
+
+        IdentityProvider identityProvider = mock(IdentityProvider.class);
+        when(identityProvider.requestToken()).thenAnswer(invocation -> {
+            int call = callCount.incrementAndGet();
+            if (call % attemptsPerCycle != 0) {
+                throw new RuntimeException("Simulated failure");
+            }
+            successLatch.countDown();
+            return new SimpleToken("user1", "token" + call, System.currentTimeMillis() + 400,
+                    System.currentTimeMillis(), null);
+        });
+
+        TokenListener listener = mock(TokenListener.class);
+        TokenManager tokenManager = new TokenManager(identityProvider,
+                new TokenManagerConfig(0.5F, 0, 2000, new RetryPolicy(maxRetries, 50)));
+
+        tokenManager.start(listener, false);
+        successLatch.await(5, TimeUnit.SECONDS);
+        tokenManager.stop();
+        delay(100);
+
+        verify(identityProvider, times(2 * attemptsPerCycle)).requestToken();
+        verify(listener, never()).onError(any());
+        verify(listener, times(2)).onTokenRenewed(any());
     }
 
     private void delay(long durationInMs) {

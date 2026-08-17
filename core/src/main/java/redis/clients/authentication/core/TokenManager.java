@@ -15,17 +15,17 @@ public class TokenManager {
     private TokenManagerConfig tokenManagerConfig;
     private TokenListener listener;
     private boolean stopped = false;
-    private AtomicInteger numberOfRetries = new AtomicInteger(0);
+    private AtomicInteger numberOfSequentialRetries = new AtomicInteger(0);
     private Token currentToken = null;
     private AtomicBoolean started = new AtomicBoolean(false);
     private Dispatcher dispatcher;
     private RenewalScheduler renewalScheduler;
     private int retryDelay;
-    private int maxRetries;
+    private int maxSequentialRetries;
 
     public TokenManager(IdentityProvider identityProvider, TokenManagerConfig tokenManagerConfig) {
         this.tokenManagerConfig = tokenManagerConfig;
-        maxRetries = tokenManagerConfig.getRetryPolicy().getMaxAttempts();
+        maxSequentialRetries = tokenManagerConfig.getRetryPolicy().getMaxAttempts();
         retryDelay = tokenManagerConfig.getRetryPolicy().getdelayInMs();
         renewalScheduler = new RenewalScheduler(this::renewToken);
         dispatcher = new Dispatcher(identityProvider, tokenManagerConfig.getTokenRequestExecTimeoutInMs());
@@ -54,13 +54,13 @@ public class TokenManager {
     /**
      * This method is called by the renewal scheduler
      * Dispatches a request to the identity provider asynchronously, with a timeout for execution, and returns the Token if successfully acquired.
-     * If the request fails, it retries until the max number of retries is reached
-     * If the request fails after max number of retries, it throws an exception
+     * If the request fails, it retries until the max number of sequential retries is reached
+     * If the request fails after max number of sequential retries, it throws an exception
      * When a new Token is received, it schedules the next renewal with calculating the delay in respect to the new token.
      * Scheduling cycle only ends under two conditions:
      * 1. TokenManager is stopped
-     * 2. Token renewal fails for max number of retries 
-     * @return
+     * 2. Token renewal fails for max number of sequential retries
+     * @return refreshed token, or null
      */
     protected Token renewToken() {
         if (stopped) {
@@ -69,12 +69,14 @@ public class TokenManager {
         Token newToken = null;
         try {
             currentToken = newToken = dispatcher.requestTokenAsync().getResult();
+            numberOfSequentialRetries.set(0); // Reset sequential retries counter, as the token has been received
+                                              // successfully
             long delay = calculateRenewalDelay(newToken.getExpiresAt(), newToken.getReceivedAt());
             renewalScheduler.scheduleNext(delay);
             listener.onTokenRenewed(newToken);
             return newToken;
         } catch (Exception e) {
-            if (numberOfRetries.getAndIncrement() < maxRetries) {
+            if (numberOfSequentialRetries.getAndIncrement() < maxSequentialRetries) {
                 renewalScheduler.scheduleNext(retryDelay);
             } else {
                 RuntimeException propogateExc = prepareToPropogate(e);
