@@ -25,7 +25,6 @@ public class TestContext {
     public static final String AZURE_PRIVATE_KEY = "AZURE_PRIVATE_KEY";
     public static final String AZURE_CERT = "AZURE_CERT";
     public static final String AZURE_REDIS_SCOPES = "AZURE_REDIS_SCOPES";
-    public static final String AZURE_USER_ASSIGNED_MANAGED_IDENTITY_CLIENT_ID = "AZURE_USER_ASSIGNED_MANAGED_IDENTITY_CLIENT_ID";
 
     private String clientId;
     private String authority;
@@ -33,7 +32,6 @@ public class TestContext {
     private PrivateKey privateKey;
     private X509Certificate cert;
     private Set<String> redisScopes;
-    private String userAssignedManagedIdentityClientId;
 
     public static final TestContext DEFAULT = new TestContext();
 
@@ -42,7 +40,6 @@ public class TestContext {
         this.clientId = System.getenv(AZURE_CLIENT_ID);
         this.authority = System.getenv(AZURE_AUTHORITY);
         this.clientSecret = System.getenv(AZURE_CLIENT_SECRET);
-        this.userAssignedManagedIdentityClientId = System.getenv(AZURE_USER_ASSIGNED_MANAGED_IDENTITY_CLIENT_ID);
     }
 
     public TestContext(String clientId, String authority, String clientSecret, Set<String> redisScopes) {
@@ -84,10 +81,6 @@ public class TestContext {
             this.redisScopes = new HashSet<>(Arrays.asList(redisScopesEnv.split(";")));
         }
         return redisScopes;
-    }
-
-    public String getUserAssignedManagedIdentityClientId() {
-        return userAssignedManagedIdentityClientId;
     }
 
     private PrivateKey getPrivateKey(String privateKey) {
