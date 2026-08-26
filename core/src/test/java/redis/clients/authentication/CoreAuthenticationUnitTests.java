@@ -12,6 +12,7 @@ import static org.hamcrest.Matchers.either;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doAnswer;
@@ -272,12 +273,13 @@ public class CoreAuthenticationUnitTests {
                 new TokenManagerConfig(0.7F, 200, 2000, new RetryPolicy(maxRetries, 50)));
 
         tokenManager.start(listener, false);
-        allAttemptsLatch.await(5, TimeUnit.SECONDS);
+        assertTrue(allAttemptsLatch.await(5, TimeUnit.SECONDS));
         delay(200);
 
         verify(identityProvider, times(totalExpectedAttempts)).requestToken();
         verify(listener, times(1)).onError(any());
         verify(listener, never()).onTokenRenewed(any());
+        tokenManager.stop();
     }
 
     @Test
@@ -294,7 +296,10 @@ public class CoreAuthenticationUnitTests {
                 throw new RuntimeException("Simulated failure");
             }
             successLatch.countDown();
-            return new SimpleToken("user1", "token" + call, System.currentTimeMillis() + 400,
+            // first success expires soon to trigger a second cycle; later successes get a
+            // long TTL so no further renewal can start before the test verifies call counts
+            long ttl = (call == attemptsPerCycle) ? 400 : 60_000;
+            return new SimpleToken("user1", "token" + call, System.currentTimeMillis() + ttl,
                     System.currentTimeMillis(), null);
         });
 
@@ -303,13 +308,14 @@ public class CoreAuthenticationUnitTests {
                 new TokenManagerConfig(0.5F, 0, 2000, new RetryPolicy(maxRetries, 50)));
 
         tokenManager.start(listener, false);
-        successLatch.await(5, TimeUnit.SECONDS);
-        tokenManager.stop();
-        delay(100);
+        assertTrue(successLatch.await(5, TimeUnit.SECONDS));
+        await().atMost(2, TimeUnit.SECONDS).untilAsserted(() -> {
+            verify(listener, times(2)).onTokenRenewed(any());
+        });
 
         verify(identityProvider, times(2 * attemptsPerCycle)).requestToken();
         verify(listener, never()).onError(any());
-        verify(listener, times(2)).onTokenRenewed(any());
+        tokenManager.stop();
     }
 
     private void delay(long durationInMs) {
