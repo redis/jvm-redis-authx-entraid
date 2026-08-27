@@ -10,13 +10,13 @@ To install the Entra ID provider, add the following dependencies to your `pom.xm
 <dependency>
     <groupId>redis.clients.authentication</groupId>
     <artifactId>redis-authx-entraid</artifactId>
-    <version>0.1.1-beta1</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 If you're using Gradle, add the following dependencies to your `build.gradle` file:
 
 ```
-implementation 'redis.clients.authentication:redis-authx-entraid:0.1.1-beta1'
+implementation 'redis.clients.authentication:redis-authx-entraid:0.2.0'
 ```
 
 ### Quick Start
